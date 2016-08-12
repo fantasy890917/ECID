@@ -26,12 +26,12 @@ public class MainActivity extends Activity {
 
     private void init_LGE_AutoProfile(LgeMccMncSimInfo simInfo, HashMap<String, String> mConfig)
     {
-        /*
+        
         Log.d(TAG,"Parser apkoverlay-Contacts3_JB:contacts_setting.xml");
         GeneralProfileParser lgeContactSettingParser =  new LgeContactSettingParser(this);
         lgeContactSettingParser.loadLgProfile(GeneralParserAttribute.FILE_PATH_CONTACT_SETTINGS, mConfig, simInfo);
         Log.d(TAG,"mConfig=="+mConfig.toString());
-
+        /*
         mConfig = new HashMap<String,String>();
         Log.d(TAG,"Parser apkoverlay-LGPartnerBookmarksProvider: browser_config.xml");
         LgeBrowserProfileParser lgeBrowserProfileParser =  new LgeBrowserProfileParser(this);
@@ -55,8 +55,9 @@ public class MainActivity extends Activity {
         GeneralProfileParser lgeFeatrueSetParser = new LgeFeatrueSetParser(this);
         lgeFeatrueSetParser.loadLgProfile(GeneralParserAttribute.FILE_PATH_FEATURE_OPEN, mConfig, simInfo);
         Log.d(TAG,"mConfig=="+mConfig.toString());
+		*/
         mConfig = new HashMap<String,String>();
-
+        
         //mms special:<siminfo operator="default" country="" mcc="" mnc="" />
         Log.d(TAG,"Parser apkoverlay-LGMessage4:mms_config.xml");
         GeneralProfileParser lgeMmsConfigParser = new LgeMmsConfigParser(this);
@@ -64,13 +65,13 @@ public class MainActivity extends Activity {
         Log.d(TAG,"mConfig=="+mConfig.toString());
         mConfig = new HashMap<String,String>();
 
-
+        /*
         Log.d(TAG,"Parser apkoverlay-LGCbReceiver4:cb_config.xml");
         GeneralProfileParser lgeCbConfigParser = new LgeCBConfigParser(this);
         lgeCbConfigParser.loadLgProfile(GeneralParserAttribute.FILE_PATH_CB_CONFIG, mConfig, simInfo);
         Log.d(TAG,"mConfig=="+mConfig.toString());
         mConfig = new HashMap<String,String>();
-        */
+        
         Log.d(TAG,"Parser apkoverlay-LGEmail4:email_config.xml");
         GeneralProfileParser lgeEmailConfigParser = new LgeEmailConfigParser(this);
         lgeEmailConfigParser.loadLgProfile(GeneralParserAttribute.FILE_PATH_EMAIL_CONFIG, mConfig, simInfo);
@@ -88,7 +89,7 @@ public class MainActivity extends Activity {
         GeneralProfileParser lgeLTEConfigParser = new LgeLTEConfigParser(this);
         lgeLTEConfigParser.loadLgProfile(GeneralParserAttribute.FILE_PATH_LTE_READY_CONFIG, mConfig, simInfo);
         Log.d(TAG,"mConfig=="+mConfig.toString());
-
+*/
     }
 
     @Override

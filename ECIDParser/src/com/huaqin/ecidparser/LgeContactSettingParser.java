@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import com.huaqin.ecidparser.utils.*;
 public class LgeContactSettingParser extends GeneralProfileParser {
-
+	private static final String TAG = Utils.APP+LgeContactSettingParser.class.getSimpleName();
     public static final String ATTR_ITEM_STORAGE = "NEW_CONTACT_DEFAULT";
     public static final String ATTR_VALUE_SIM_STORAGE = "In SIM memory";
     public static final String ATTR_VALUE_GOOGLE_STORAGE = "In Google memory";
@@ -30,10 +30,9 @@ public class LgeContactSettingParser extends GeneralProfileParser {
     @Override
 	protected ProfileData getMatchedProfile(XmlPullParser parser, LgeMccMncSimInfo simInfo, HashMap map) {
 
-                Log.d(TAG, "LgeContactSettingParser-getMatchedProfile");
+        Log.d(TAG, "getMatchedProfile");
 		ProfileData commonProfile = null;
 		ProfileData validProfile = null;
-		ProfileData featureProfile = null;
 		boolean found;
 		MatchedProfile profile = new MatchedProfile();
 
@@ -50,7 +49,7 @@ public class LgeContactSettingParser extends GeneralProfileParser {
 				if (ELEMENT_NAME_PROFILES.equals(parser.getName())) {
 					nextElement(parser);
 				}
-				// find a "<profiles>" element
+				// find a "<profile>" element
 				if (ELEMENT_NAME_PROFILE.equals(parser.getName())) {
 					nextElement(parser);    // find a "<siminfo>" element or <FeatureSet>
 				}
@@ -59,13 +58,10 @@ public class LgeContactSettingParser extends GeneralProfileParser {
 				}
 				// find a "<siminfo>" element
 				if (ELEMENT_NAME_SIMINFO.equals(parser.getName())) {
-
 					found = getValidProfile(profile, parser, simInfo);
-
 					// test code , if sim info is null, use default profile (need to place default profile at the top of the profiles, the fastest way)
 					// when bestMatchedProfile was found
-					if (((simInfo == null || simInfo.isNull())
-							&& profile.mDefaultProfile != null)
+					if (profile.mDefaultProfile != null
 							|| profile.mBestMatchedProfile != null) {
 						if (VDBG) {
 							Log.v(TAG, "[getMatchedProfile] sim info : " + simInfo + "bestMatchedProfile" + profile.mBestMatchedProfile);
@@ -79,10 +75,8 @@ public class LgeContactSettingParser extends GeneralProfileParser {
 
 						if (DBG) { Log.d(TAG, "[getMatchedProfile] skipCurrentElement"); }
 					}
-				} 
-
-				// find a "<CommonProfile>" element 
-				else if (ELEMENT_NAME_COMMONPROFILE.equals(parser.getName())) {
+				}else if (ELEMENT_NAME_COMMONPROFILE.equals(parser.getName())) {
+					// find a "<CommonProfile>" element
 					commonProfile = readProfile(parser);
 				} 
 				else {
@@ -99,13 +93,13 @@ public class LgeContactSettingParser extends GeneralProfileParser {
 		validProfile = profile.mBestMatchedProfile != null ? profile.mBestMatchedProfile :
 			profile.mCandidateProfile != null ? profile.mCandidateProfile : profile.mDefaultProfile;
 
-		return mergeProfileIfNeeded(commonProfile, validProfile, featureProfile, map);
+		return mergeProfile(commonProfile, validProfile, map);
 
 	}
 
     protected void changeGpriValueFromLGE(HashMap hashmap, ProfileData data)
     {
-
+		Log.d(TAG,"changeGpriValueFromLGE");
         HashMap<String, String> matchmap = new HashMap<String,String>();
         matchmap.put("Phonebook@Default_Storage_Location", "NEW_CONTACT_DEFAULT");
         matchmap.put("Phonebook@Display_the_numbers_on_phonebook", "display_number_on_phonebook");

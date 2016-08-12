@@ -9,7 +9,7 @@ import org.xmlpull.v1.XmlPullParser;
 
 public class Utils {
 
-    public static final String APP = "HQ-ECID";
+    public static final String APP = "[HQ-ECID]";
     public static final String DEFAULT= "default";
     public static int MATCH_PRIORITY_OPERATOR_DEFAULT = 0;
 
