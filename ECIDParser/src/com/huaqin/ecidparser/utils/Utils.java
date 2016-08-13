@@ -225,4 +225,8 @@ public class Utils {
             return temp_gid;
         }
     }
+
+    public static boolean isEmpty(String string){
+        return string ==null || string.isEmpty();
+    }
 }

@@ -1,17 +1,21 @@
 package com.huaqin.ecidparser;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.app.Activity;
+import android.widget.TextView;
 
-import java.util.HashMap;
-import com.huaqin.ecidparser.email.OperatorConfigData;
+import com.huaqin.ecidparser.bookmarks.Bookmark;
 import com.huaqin.ecidparser.utils.GeneralParserAttribute;
 import com.huaqin.ecidparser.utils.LgeMccMncSimInfo;
 import com.huaqin.ecidparser.utils.Utils;
+import android.app.ECIDManager;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 public class MainActivity extends Activity {
     private static final String TAG = Utils.APP;    
     @Override
@@ -21,6 +25,9 @@ public class MainActivity extends Activity {
         
         LgeMccMncSimInfo mSimInfo = new LgeMccMncSimInfo("647","10");
         HashMap<String, String> mConfig = new HashMap<String,String>();
+        TextView tv = (TextView)findViewById(R.id.textView);
+        ECIDManager ecid = (ECIDManager) getSystemService(Context.ECID_PARSER_SERVICE);
+        tv.setText(ecid.getValue("test"));
         init_LGE_AutoProfile(mSimInfo,mConfig);
     }
 
@@ -31,14 +38,18 @@ public class MainActivity extends Activity {
         GeneralProfileParser lgeContactSettingParser =  new LgeContactSettingParser(this);
         lgeContactSettingParser.loadLgProfile(GeneralParserAttribute.FILE_PATH_CONTACT_SETTINGS, mConfig, simInfo);
         Log.d(TAG,"mConfig=="+mConfig.toString());
-        /*
+
         mConfig = new HashMap<String,String>();
         Log.d(TAG,"Parser apkoverlay-LGPartnerBookmarksProvider: browser_config.xml");
+
+        ArrayList<Bookmark> mBookmarkList = new ArrayList<Bookmark>();
         LgeBrowserProfileParser lgeBrowserProfileParser =  new LgeBrowserProfileParser(this);
-        String str =  lgeBrowserProfileParser.loadLgProfileToString(GeneralParserAttribute.FILE_PATH_BROWSER_CONFIG, mConfig, simInfo);
+        lgeBrowserProfileParser.loadLgProfile(GeneralParserAttribute.FILE_PATH_BROWSER_CONFIG, mConfig, simInfo);
+        mBookmarkList = lgeBrowserProfileParser.getBoomarkList();
         Log.d(TAG,"mConfig=="+mConfig.toString());
+        Log.d(TAG,"mBookmarkList=="+mBookmarkList.size());
         mConfig = new HashMap<String,String>();
-        
+        /*
         Log.d(TAG,"Parser GPRI: telephony.xml");
         GeneralProfileParser lgeTelephonyParser = new LgeTelephonyParser(this);
         lgeTelephonyParser.loadLgProfile(GeneralParserAttribute.FILE_PATH_TELEPHONY_PROFILE, mConfig, simInfo);

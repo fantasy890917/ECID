@@ -20,80 +20,45 @@ import java.util.Iterator;
 import java.io.IOException;
 public class LgeMmsConfigParser extends GeneralProfileParser {
 
-    private static final String TAG = Utils.APP+LgeMmsConfigParser.class.getSimpleName();;
+    private static final String TAG = Utils.APP+LgeMmsConfigParser.class.getSimpleName();
     public LgeMmsConfigParser(Context context) {
         super(context);
     }
 
     @Override
-    protected ProfileData getMatchedProfile(XmlPullParser parser, LgeMccMncSimInfo simInfo, HashMap map) {
-        Log.d(TAG, "getMatchedProfile");
-        ProfileData commonProfile = null;
-        ProfileData validProfile = null;
-        boolean found;
-        MatchedProfile profile = new MatchedProfile();
-
-        if (parser == null) {
-            return null;
+    protected ProfileData readProfile(XmlPullParser parser)
+            throws XmlPullParserException, IOException {
+        Log.d(TAG,"readProfile-----------------");
+        NameValueProfile p = new NameValueProfile();
+        int type;
+        Log.d(TAG,"readProfile---name="+parser.getName()+" text="+parser.getText());
+        while (ELEMENT_NAME_SIMINFO.equals(parser.getName()) ||
+                ELEMENT_NAME_FEATURESET.equals(parser.getName())) {
+            nextElement(parser);
         }
+        Log.d(TAG,"readProfile---valid Element name="+parser.getName());
+        while (parser.getName() != null
+                &&(!parser.getName().equals(ELEMENT_NAME_PROFILE))) {
 
-        try {
-            // find a "<profiles>" element
-            beginDocument(parser, ELEMENT_NAME_PROFILES);
+            String tag = parser.getName();
+            Log.d(TAG, "[readProfile] TAG : " + tag);
 
-            while (true) {
-                // find a "<profiles>" element
-                if (ELEMENT_NAME_PROFILES.equals(parser.getName())) {
-                    nextElement(parser);
+            String key = parser.getName();
+            if (key != null) {
+                type = parser.next();
+                if (type == XmlPullParser.TEXT) {
+                    String value = parser.getText();
+                    p.setValue(key, value);
+                    Log.d(TAG, "[readProfile] KEY : " + key + ", VALUE : " + value);
                 }
-                // find a "<profile>" element
-                if (ELEMENT_NAME_PROFILE.equals(parser.getName())) {
-                    nextElement(parser);    // find a "<siminfo>" element or <FeatureSet>
-                }
-                if (parser.getEventType() == XmlPullParser.END_DOCUMENT) {
-                    break;
-                }
-                // find a "<siminfo>" element
-                if (ELEMENT_NAME_SIMINFO.equals(parser.getName())) {
-                    found = getValidProfile(profile, parser, simInfo);
-                    // test code , if sim info is null, use default profile (need to place default profile at the top of the profiles, the fastest way)
-                    // when bestMatchedProfile was found
-                    if (profile.mDefaultProfile != null
-                            || profile.mBestMatchedProfile != null) {
-                        if (VDBG) {
-                            Log.v(TAG, "[getMatchedProfile] sim info : " + simInfo + "bestMatchedProfile" + profile.mBestMatchedProfile);
-                        }
-                        break;
-                    }
-
-                    // we didn't parse this element
-                    if (!found) {
-                        skipCurrentElement(parser);
-
-                        if (DBG) {
-                            Log.d(TAG, "[getMatchedProfile] skipCurrentElement");
-                        }
-                    }
-                } else if (ELEMENT_NAME_COMMONPROFILE.equals(parser.getName())) {
-                    // find a "<CommonProfile>" element
-                    commonProfile = readProfile(parser);
-                } else {
-                    throw new XmlPullParserException("Unexpected tag: found " + parser.getName());
-                }
-
             }
-        } catch (XmlPullParserException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+            nextElement(parser);
         }
-        validProfile = profile.mBestMatchedProfile != null ? profile.mBestMatchedProfile :
-                profile.mCandidateProfile != null ? profile.mCandidateProfile : profile.mDefaultProfile;
-        return mergeProfile(commonProfile, validProfile, map);
 
+        return (ProfileData)p;
     }
 
-
+    @Override
     protected void changeGpriValueFromLGE(HashMap hashmap, ProfileData data) {
         Log.d(TAG,"changeGpriValueFromLGE");
         HashMap<String, String> matchmap = new HashMap<String, String>();
@@ -137,23 +102,6 @@ public class LgeMmsConfigParser extends GeneralProfileParser {
                 hashmap.put(tag, value);
             }
         }
-    }
-
-    @Override
-    protected boolean currentElemntShouldBeSkiped(XmlPullParser parser) {
-        return ELEMENT_NAME_SIMINFO.equals(parser.getName()) ||
-                ELEMENT_NAME_FEATURESET.equals(parser.getName());
-    }
-
-    @Override
-    protected boolean currentElemntHasValidTag(XmlPullParser parser) {
-        return parser.getName() != null
-                &&(!parser.getName().equals(ELEMENT_NAME_PROFILE));
-    }
-
-    @Override
-    protected String getValidParserTagName(XmlPullParser parser) {
-        return parser.getName();
     }
 
 }
