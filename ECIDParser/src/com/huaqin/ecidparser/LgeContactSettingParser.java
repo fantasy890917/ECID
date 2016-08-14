@@ -23,8 +23,7 @@ public class LgeContactSettingParser extends GeneralProfileParser {
 	protected ProfileData readProfile(XmlPullParser parser)
 			throws XmlPullParserException, IOException {
 		NameValueProfile p = new NameValueProfile();
-		int type;
-		Log.d(TAG,"readProfile---name="+parser.getName()+" text="+parser.getText());
+
 		while (ELEMENT_NAME_SIMINFO.equals(parser.getName()) ||
 				ELEMENT_NAME_FEATURESET.equals(parser.getName())) {
 			nextElement(parser);
@@ -37,7 +36,7 @@ public class LgeContactSettingParser extends GeneralProfileParser {
 			String key = parser.getAttributeValue(null, ATTR_NAME);
 			Log.d(TAG, "[readProfile] key : " + key);
 			if (key != null) {
-				type = parser.next();
+				int type = parser.next();
 				Log.d(TAG, "[readProfile] type : " + type);
 				if (type == XmlPullParser.TEXT) {
 					String value = parser.getText();

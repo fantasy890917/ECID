@@ -29,7 +29,6 @@ public interface GeneralParserAttribute {
 
 
 
-
     public static final String ELEMENT_NAME_PROFILES = "profiles";
     public static final String ELEMENT_NAME_PROFILE = "profile";
     public static final String ELEMENT_NAME_SIMINFO = "siminfo";
@@ -39,11 +38,6 @@ public interface GeneralParserAttribute {
 
     public static final String ATTR_NAME = "name";
     public static final String ATTR_VALUE = "value";
-
-    //Setting provider
-    public static final String ELEMENT_NAME_SYSTEMPROPERTY = "SystemProperty";
-    public static final String ELEMENT_NAME_SETTINGSSYSTEM = "Settings.System";
-    public static final String ELEMENT_NAME_SETTINGSSECURE = "Settings.Secure";
 
 
     public final static int FIND_CANDIDATE_MATCH = 1;
